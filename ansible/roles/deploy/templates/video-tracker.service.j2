@@ -1,0 +1,15 @@
+[Unit]
+Description=video-tracker Golang
+ConditionPathExists=/home/ad3/video-tracker/bin/video-tracker
+
+[Service]
+User=ad3
+Group=ad3
+Restart=always
+RestartSec=3
+LimitNOFILE=999999
+WorkingDirectory=/home/ad3/video-tracker/bin
+ExecStart=/home/ad3/video-tracker/bin/video-tracker
+
+[Install]
+WantedBy=multi-user.target

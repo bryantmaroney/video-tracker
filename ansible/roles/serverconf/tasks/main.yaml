@@ -1,0 +1,45 @@
+---
+  - name: Copy nginx configuration file
+    become: yes
+    template: src=nginx.conf.j2
+              dest=/etc/nginx/nginx.conf
+    notify:
+      - Reload Nginx
+
+  - name: Copy nginx site config
+    become: yes
+    template: src=ad3media.com.j2
+              dest=/etc/nginx/sites-available/{{ domain | default('ad3media.com') }}
+
+  - name: Enable site config
+    become: yes
+    file: src=/etc/nginx/sites-available/{{ domain | default('ad3media.com') }} dest=/etc/nginx/sites-enabled/{{ domain | default('ad3media.com') }} state=link
+    notify:
+      - Reload Nginx
+
+  - name: Copy PHP-FPM status site config
+    become: yes
+    template: src=fpm-status.conf.j2
+              dest=/etc/nginx/sites-available/fpm-status.local
+
+  - name: Enable PHP-FPM status config
+    become: yes
+    file: src=/etc/nginx/sites-available/fpm-status.local dest=/etc/nginx/sites-enabled/fpm-status.local state=link
+    notify:
+      - Reload Nginx
+
+  - name: Copy PHP-FPM pool configuration file
+    become: yes
+    template: src=php-pool.conf.j2
+              dest=/etc/php/7.1/fpm/pool.d/www.conf
+    notify:
+      - Reload PHPFPM
+
+  - name: Copy sysctl configuration file
+    become: yes
+    template: src=sysctl.conf.j2
+              dest=/etc/sysctl.d/10-ad3.conf
+
+  - name: Reload sysctl
+    become: yes
+    command: sysctl --system

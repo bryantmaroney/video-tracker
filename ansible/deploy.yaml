@@ -1,0 +1,7 @@
+---
+  - hosts: "{{ host | default('ad3production') }}"
+    vars_files:
+      - vars/{{ env | default('production') }}.yaml
+    become: no
+    roles:
+      - deploy

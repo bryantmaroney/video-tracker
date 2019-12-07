@@ -1,0 +1,5 @@
+---
+  - hosts: "{{ host | default('ad3production') }}"
+    become: no
+    roles:
+      - serverconf
